@@ -41,11 +41,23 @@ bool check_files()
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    {
+        QString dir;
+
+        {
+            QCoreApplication core(argc, argv, 0);
+
+            dir = QApplication::applicationDirPath();
+        }
 
 #ifdef Q_OS_DARWIN
-    QDir::setCurrent(a.applicationDirPath() + "/../Resources");
+        QDir::setCurrent(dir + "/../Resources");
+#else
+        QApplication::addLibraryPath(dir + "/lib");
 #endif
+    }
+
+    QApplication a(argc, argv);
 
     if (!check_files()) {
         QMessageBox::warning(nullptr, "",
